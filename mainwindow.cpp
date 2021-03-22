@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
             return;
         }
 
-        if (!JPS(start, end, world)) {
+        if (!pathFinding(start, end, world)) {
             QMessageBox::information(this, "未找到", "未找到任何路径");
             return;
         }
@@ -97,7 +97,7 @@ bool MainWindow::checkWorld()
     return sum == 5;
 }
 
-bool MainWindow::JPS(QPoint start, QPoint end, int world[N][N])
+bool MainWindow::pathFinding(QPoint start, QPoint end, int world[N][N])
 {
     // coding
     // all route mark with GREEN, look like: world[i][j] = ROUTE;

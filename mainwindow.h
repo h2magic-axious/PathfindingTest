@@ -57,7 +57,7 @@ public:
     QRect RCToPos(int r, int c);
     bool checkWorld();
 
-    bool JPS(QPoint start, QPoint end, int world[N][N]);
+    bool pathFinding(QPoint start, QPoint end, int world[N][N]);
 
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);
