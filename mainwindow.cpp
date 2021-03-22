@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -102,7 +101,8 @@ bool MainWindow::pathFinding(QPoint start, QPoint end, int world[N][N])
     // coding
     // all route mark with GREEN, look like: world[i][j] = ROUTE;
     // if find successfully, return true.
-    return false;
+
+    return aStar(start, end, world);
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -137,7 +137,6 @@ void MainWindow::paintEvent(QPaintEvent *)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    Qt::MouseButtons b = event->buttons();
     int posX = event->x();
     int posY = event->y();
     int tempX = -1;
@@ -160,7 +159,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    Qt::MouseButtons b = event->buttons();
     int posX = event->x();
     int posY = event->y();
     int tempX = -1;

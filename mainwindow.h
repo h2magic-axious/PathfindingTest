@@ -6,13 +6,11 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QPoint>
 #include <QPushButton>
 #include <QRect>
 #include <QTime>
 
 #include "pathfinding.h"
-#include "reference.h"
 
 class MainWindow : public QMainWindow
 {
