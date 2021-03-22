@@ -110,6 +110,8 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter->setBrush(Qt::red);
             if (worldTemp == END_POS)
                 painter->setBrush(Qt::blue);
+            if (worldTemp == ROUTE)
+                painter->setBrush(Qt::green);
 
             painter->drawRect(tempRect);
             //painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
