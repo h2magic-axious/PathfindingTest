@@ -43,10 +43,17 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(runButton, &QPushButton::clicked, this, [=]() {
         status = RUN;
-        if (!checkWorld())
+        if (!checkWorld()) {
             QMessageBox::critical(this, "错误", "请只设置一个起点和一个终点");
+            return;
+        }
+
+        if (!JPS(start, end, world)) {
+            QMessageBox::information(this, "未找到", "未找到任何路径");
+            return;
+        }
+
         selfUpdate();
-        return;
     });
 }
 
@@ -88,6 +95,14 @@ bool MainWindow::checkWorld()
             sum += world[i][j];
         }
     return sum == 5;
+}
+
+bool MainWindow::JPS(QPoint start, QPoint end, int world[N][N])
+{
+    // coding
+    // all route mark with GREEN, look like: world[i][j] = ROUTE;
+    // if find successfully, return true.
+    return false;
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
