@@ -20,7 +20,9 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    pathfinding.h \
+    reference.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
