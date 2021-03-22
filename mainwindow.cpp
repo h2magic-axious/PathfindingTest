@@ -41,6 +41,13 @@ MainWindow::MainWindow(QWidget *parent)
         status = END_POINT;
         selfUpdate();
     });
+    connect(runButton, &QPushButton::clicked, this, [=]() {
+        status = RUN;
+        if (!checkWorld())
+            QMessageBox::critical(this, "错误", "请只设置一个起点和一个终点");
+        selfUpdate();
+        return;
+    });
 }
 
 MainWindow::~MainWindow()
@@ -67,6 +74,20 @@ bool MainWindow::posInWorld(int x, int y)
 QRect MainWindow::RCToPos(int r, int c)
 {
     return QRect(START_X + c * w, START_Y + r * w, w, w);
+}
+
+bool MainWindow::checkWorld()
+{
+    int sum = 0;
+    int temp = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++) {
+            temp = world[i][j];
+            if (temp == 1 || temp == 0)
+                continue;
+            sum += world[i][j];
+        }
+    return sum == 5;
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -108,10 +129,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         return;
     //qDebug() << QString("%1,%2").arg(posX).arg(posY) << ','
     //<< QString("%1,%2").arg(tempX).arg(tempY);
-    if (status == START_POINT)
+    if (status == START_POINT) {
         world[tempX][tempY] = START_POS;
-    if (status == END_POINT)
+        start = QPoint(tempX, tempY);
+    }
+    if (status == END_POINT) {
         world[tempX][tempY] = END_POS;
+        end = QPoint(tempX, tempY);
+    }
 
     selfUpdate();
 }

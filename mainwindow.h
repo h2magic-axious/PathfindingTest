@@ -3,6 +3,7 @@
 
 #include <QLabel>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPoint>
@@ -26,6 +27,7 @@
 #define CAN_NOT_MOVE 1
 #define START_POS 2
 #define END_POS 3
+#define ROUTE 4
 
 class MainWindow : public QMainWindow
 {
@@ -34,15 +36,17 @@ class MainWindow : public QMainWindow
 
     int w = SQUARE / N;
     int status = 0;
-    QString statusText = QString("设置障碍");
 
-    QPushButton *clearButton = new QPushButton("清空障碍", this);
+    QPushButton *clearButton = new QPushButton("全部清空", this);
     QPushButton *setHinderButton = new QPushButton("设置障碍", this);
     QPushButton *setStartButton = new QPushButton("设置起点", this);
     QPushButton *setEndButton = new QPushButton("设置终点", this);
     QPushButton *runButton = new QPushButton("开始寻路", this);
     QLabel *statusLabel = new QLabel("当前状态: ", this);
-    QLabel *currentStatusLabel = new QLabel(statusText, this);
+    QLabel *currentStatusLabel = new QLabel("设置障碍", this);
+
+    QPoint start;
+    QPoint end;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -51,6 +55,7 @@ public:
     bool posToRC(int x, int y, int *resultX, int *resultY);
     bool posInWorld(int x, int y);
     QRect RCToPos(int r, int c);
+    bool checkWorld();
 
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *event);
