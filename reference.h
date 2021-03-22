@@ -1,7 +1,7 @@
 #ifndef REFERENCE_H
 #define REFERENCE_H
 
-#define N 50
+#define N 20
 #define DX 10
 
 #define START_X 10
@@ -9,9 +9,7 @@
 #define SQUARE 800
 
 #define HINDER 0
-#define START_POINT 1
-#define END_POINT 2
-#define RUN 3
+#define RUN 1
 
 #define CAN_MOVE 0
 #define CAN_NOT_MOVE 1

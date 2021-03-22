@@ -22,6 +22,8 @@ public:
     ~Node() = default;
 
     QString toString() { return QString("%1,%2").arg(point.x()).arg(point.y()); }
+
+    bool operator==(const Node &other) { return point == other.point; }
 };
 
 typedef QVector<Node> PointList;
@@ -69,6 +71,7 @@ PointList static neighbour(Node p,
                            const PointList &closeList,
                            PointScoreMap *gm)
 {
+    qDebug() << "In neighbour";
     int x = p.point.x();
     int y = p.point.y();
 
@@ -79,6 +82,7 @@ PointList static neighbour(Node p,
     for (int i = -1; i <= 1; i++)
         for (int j = -1; j <= 1; j++) {
             QPoint pTemp = QPoint(x + i, y + j);
+            qDebug() << QString("Check: (%1,%2)").arg(pTemp.x()).arg(pTemp.y());
 
             if (pTemp == p.point)
                 continue;
@@ -118,7 +122,6 @@ bool static aStar(QPoint start, QPoint end, int world[N][N])
     fScoreMap.insert(s.toString(), 0);
 
     Node tempPoint = s;
-    QVector<QPoint> result;
 
     while (!openSet.empty()) {
         // 从OpenSet中取出F值最小的一个放入CloseSet
@@ -127,19 +130,15 @@ bool static aStar(QPoint start, QPoint end, int world[N][N])
 
         // 如果tempPoint是终点，则得出结果
         if (tempPoint.point == end) {
-            // 从终点开始，依此取得父节点，并添加在resut的头部
             while (tempPoint.parent->point != start) {
-                result.push_front(tempPoint.parent->point);
                 tempPoint = *tempPoint.parent;
-            }
-            // 在图形界面中显示
-            for (QPoint p : result) {
-                world[p.x()][p.y()] = ROUTE;
+                world[tempPoint.point.x()][tempPoint.point.y()] = ROUTE;
             }
             return true;
         }
 
-        openSet.pop_back();
+        qDebug() << "Begin: remove point and add point to closeSet";
+        openSet.removeOne(tempPoint);
         closeSet.push_back(tempPoint);
 
         // 计算tempPoint的所有邻居，然后遍历，（该列表经过处理后没有冗余项）
@@ -151,6 +150,8 @@ bool static aStar(QPoint start, QPoint end, int world[N][N])
             fScoreMap.insert(p.toString(), tempH + gScoreMap.value(p.toString()));
             openSet.push_back(p);
         }
+
+        qDebug() << "OpenSet, size: " << openSet.size();
     }
 
     return false;

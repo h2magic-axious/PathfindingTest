@@ -13,10 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     clearButton->move(0, 0);
     setHinderButton->move(100, 0);
-    setStartButton->move(200, 0);
-    setEndButton->move(300, 0);
-    runButton->move(400, 0);
-    statusLabel->move(500, 0);
+    runButton->move(200, 0);
+    statusLabel->move(300, 0);
 
     currentStatusLabel->setStyleSheet("color:blue;");
     currentStatusLabel->move(600, 0);
@@ -30,14 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(setHinderButton, &QPushButton::clicked, this, [=]() {
         status = HINDER;
-        selfUpdate();
-    });
-    connect(setStartButton, &QPushButton::clicked, this, [=]() {
-        status = START_POINT;
-        selfUpdate();
-    });
-    connect(setEndButton, &QPushButton::clicked, this, [=]() {
-        status = END_POINT;
         selfUpdate();
     });
     connect(runButton, &QPushButton::clicked, this, [=]() {
@@ -65,8 +55,8 @@ bool MainWindow::posToRC(int x, int y, int *resultX, int *resultY)
     if (!posInWorld(x, y))
         return false;
 
-    *resultX = (y - START_Y) / w;
-    *resultY = (x - START_X) / w;
+    *resultX = (x - START_X) / w;
+    *resultY = (y - START_Y) / w;
     return true;
 }
 
@@ -129,31 +119,32 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter->setBrush(Qt::green);
 
             painter->drawRect(tempRect);
-            //painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
+            painter->drawText(tempRect, QString("%1,%2").arg(j).arg(i));
         }
 
     painter->end();
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event)
+void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    Qt::MouseButtons b = event->buttons();
     int posX = event->x();
     int posY = event->y();
-    int tempX = -1;
-    int tempY = -1;
-    if (!posToRC(posX, posY, &tempX, &tempY))
+    int row = -1;
+    int col = -1;
+    if (!posToRC(posX, posY, &col, &row))
         return;
-    //qDebug() << QString("%1,%2").arg(posX).arg(posY) << ','
-    //<< QString("%1,%2").arg(tempX).arg(tempY);
-    if (status == START_POINT) {
-        world[tempX][tempY] = START_POS;
-        start = QPoint(tempX, tempY);
-    }
-    if (status == END_POINT) {
-        world[tempX][tempY] = END_POS;
-        end = QPoint(tempX, tempY);
-    }
 
+    qDebug() << QString("world[%1][%2] = %2").arg(row).arg(col).arg(world[row][col]);
+
+    if (b == Qt::LeftButton) {
+        world[row][col] = START_POS;
+        start = QPoint(row, col);
+    }
+    if (b == Qt::RightButton) {
+        world[row][col] = END_POS;
+        end = QPoint(row, col);
+    }
     selfUpdate();
 }
 
@@ -161,13 +152,13 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     int posX = event->x();
     int posY = event->y();
-    int tempX = -1;
-    int tempY = -1;
-    if (!posToRC(posX, posY, &tempX, &tempY))
+    int col = -1;
+    int row = -1;
+    if (!posToRC(posX, posY, &col, &row))
         return;
 
     if (status == HINDER)
-        world[tempX][tempY] = CAN_NOT_MOVE;
+        world[row][col] = CAN_NOT_MOVE;
 
     selfUpdate();
 }
@@ -177,12 +168,6 @@ void MainWindow::selfUpdate()
     switch (status) {
     case HINDER:
         currentStatusLabel->setText("设置障碍");
-        break;
-    case START_POINT:
-        currentStatusLabel->setText("设置起点");
-        break;
-    case END_POINT:
-        currentStatusLabel->setText("设置终点");
         break;
     case RUN:
         currentStatusLabel->setText("开始寻路");

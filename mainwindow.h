@@ -22,8 +22,6 @@ class MainWindow : public QMainWindow
 
     QPushButton *clearButton = new QPushButton("全部清空", this);
     QPushButton *setHinderButton = new QPushButton("设置障碍", this);
-    QPushButton *setStartButton = new QPushButton("设置起点", this);
-    QPushButton *setEndButton = new QPushButton("设置终点", this);
     QPushButton *runButton = new QPushButton("开始寻路", this);
     QLabel *statusLabel = new QLabel("当前状态: ", this);
     QLabel *currentStatusLabel = new QLabel("设置障碍", this);
@@ -43,7 +41,7 @@ public:
     bool pathFinding(QPoint start, QPoint end, int world[N][N]);
 
     void paintEvent(QPaintEvent *);
-    void mousePressEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void selfUpdate();
 };
