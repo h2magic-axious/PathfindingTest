@@ -61,8 +61,10 @@ Node static *minScore(const PointSet &list, const PointScoreMap &fm, QTextStream
 
         //        *logRepoter << "    Check: " << p->toString() << " Score: " << pValue << '\n';
 
-        if (!pValue)
+        if (!pValue) {
+            *logRepoter << "  Get min f-value point: " << p->toString() << '\n';
             return p;
+        }
 
         if (!fValue) {
             fValue = pValue;
@@ -98,17 +100,17 @@ PointSet static neighbour(
 
     int value = gm->value(p->toString());
 
-    *logRepoter << "    Legal point: \n";
+    *logRepoter << "    Legal point: ";
     for (int i = -1; i <= 1; i++)
         for (int j = -1; j <= 1; j++) {
             if (!i && !j)
                 continue;
 
             QPoint pTemp = QPoint(y + j, x + i);
-            QString stringPoint = QString("(%1,%2)").arg(pTemp.x()).arg(pTemp.y());
+            QString stringPoint = QString("[%1,%2]").arg(pTemp.x()).arg(pTemp.y());
 
             if (checkLegalPoint(pTemp, world[pTemp.x()][pTemp.y()], closeList)) {
-                *logRepoter << "      " << stringPoint << '\n';
+                *logRepoter << stringPoint << ' ';
                 int pValue = (qAbs(i) + qAbs(j) == 2) ? 14 : 10;
                 Node *pt = new Node(pTemp, p);
                 gm->insert(pt->toString(), value + pValue);
