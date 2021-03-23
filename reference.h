@@ -25,8 +25,52 @@
 #include <QFile>
 #include <QList>
 #include <QMap>
-#include <QPoint>
+
 #include <QSet>
 #include <QString>
+
+class Position
+{
+public:
+    int row;
+    int col;
+
+    int d;
+
+    Position()
+    {
+        row = 0;
+        col = 0;
+        d = 0;
+    }
+    Position(int r, int c) : row(r), col(c) { d = row * row + col * col; }
+    ~Position() = default;
+
+    bool operator<(const Position &other) { return d < other.d; }
+    bool operator==(const Position &other) { return (row == other.row) && (col == other.col); }
+    bool operator!=(const Position &other) { return (row != other.row) && (col != other.col); }
+    QString toString() { return QString("%1,%2").arg(row).arg(col); }
+
+    int worldValue(int world[N][N]) { return world[row][col]; }
+};
+
+class Node
+{
+public:
+    Position position;
+    Node *parent;
+
+    Node()
+    {
+        position = Position();
+        parent = nullptr;
+    }
+    Node(Position pt, Node *pr) : position(pt), parent(pr) {}
+
+    ~Node() = default;
+
+    bool operator==(const Node &other) { return position == other.position; }
+    bool operator!=(const Node &other) { return position != other.position; }
+};
 
 #endif // REFERENCE_H

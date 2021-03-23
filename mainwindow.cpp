@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
         }
 
         if (pathFinding(start, end, world, &route)) {
-            for (QPoint p : route)
-                world[p.x()][p.y()] = ROUTE;
+            for (Position p : route)
+                world[p.row][p.col] = ROUTE;
         } else {
             QMessageBox::information(this, "未找到", "未找到任何路径");
             return;
@@ -89,7 +89,7 @@ bool MainWindow::checkWorld()
     return sum == 5;
 }
 
-bool MainWindow::pathFinding(QPoint start, QPoint end, int world[N][N], QList<QPoint> *result)
+bool MainWindow::pathFinding(Position start, Position end, int world[N][N], PositionList *result)
 {
     // coding
     // all route mark with GREEN, look like: world[i][j] = ROUTE;
@@ -140,13 +140,13 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
 
     if (b == Qt::LeftButton) {
         world[row][col] = START_POS;
-        start = QPoint(row, col);
-        *logReporter << "Set Start: [" << col << ',' << row << "]\n";
+        start = Position(row, col);
+        *logReporter << "Set Start: [" << row << ',' << col << "]\n";
     }
     if (b == Qt::RightButton) {
         world[row][col] = END_POS;
-        end = QPoint(row, col);
-        *logReporter << "Set End: [" << col << ',' << row << "]\n";
+        end = Position(row, col);
+        *logReporter << "Set End: [" << row << ',' << col << "]\n";
     }
 
     selfUpdate();
@@ -158,7 +158,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
     int posY = event->y();
     int col = -1;
     int row = -1;
-    if (!positionToRowCol(posX, posY, &col, &row))
+    if (!positionToRowCol(posX, posY, &row, &col))
         return;
 
     if (status == HINDER)

@@ -28,9 +28,9 @@ class MainWindow : public QMainWindow
     QLabel *statusLabel = new QLabel("当前状态: ", this);
     QLabel *currentStatusLabel = new QLabel("设置障碍", this);
 
-    QPoint start;
-    QPoint end;
-    QList<QPoint> route;
+    Position start;
+    Position end;
+    PositionList route;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -41,7 +41,7 @@ public:
     QRect rowColToIndex(int r, int c);
     bool checkWorld();
 
-    bool pathFinding(QPoint start, QPoint end, int world[N][N], QList<QPoint> *result);
+    bool pathFinding(Position start, Position end, int world[N][N], PositionList *result);
 
     void paintEvent(QPaintEvent *);
     void mouseDoubleClickEvent(QMouseEvent *event);
