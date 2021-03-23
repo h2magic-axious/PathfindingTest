@@ -12,9 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     clearButton->move(0, 0);
-    setHinderButton->move(100, 0);
-    runButton->move(200, 0);
-    statusLabel->move(300, 0);
+    runButton->move(100, 0);
+    statusLabel->move(200, 0);
 
     currentStatusLabel->setStyleSheet("color:blue;");
     currentStatusLabel->move(600, 0);
@@ -24,10 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
         for (int i = 0; i < N; i++)
             for (int j = 0; j < N; j++)
                 world[i][j] = CAN_MOVE;
-        selfUpdate();
-    });
-    connect(setHinderButton, &QPushButton::clicked, this, [=]() {
-        status = HINDER;
         selfUpdate();
     });
     connect(runButton, &QPushButton::clicked, this, [=]() {
@@ -41,13 +36,18 @@ MainWindow::MainWindow(QWidget *parent)
             QMessageBox::information(this, "未找到", "未找到任何路径");
             return;
         }
-
+        status = HINDER;
         selfUpdate();
     });
+
+    logFile->open(QIODevice::WriteOnly | QIODevice::Text);
+    logReporter = new QTextStream(logFile);
+    logFile->flush();
 }
 
 MainWindow::~MainWindow()
 {
+    logFile->close();
 }
 
 bool MainWindow::posToRC(int x, int y, int *resultX, int *resultY)
@@ -91,8 +91,8 @@ bool MainWindow::pathFinding(QPoint start, QPoint end, int world[N][N])
     // coding
     // all route mark with GREEN, look like: world[i][j] = ROUTE;
     // if find successfully, return true.
-
-    return aStar(start, end, world);
+    *logReporter << "Start!\n";
+    return aStar(start, end, world, logReporter);
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -135,16 +135,17 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     if (!posToRC(posX, posY, &col, &row))
         return;
 
-    qDebug() << QString("world[%1][%2] = %2").arg(row).arg(col).arg(world[row][col]);
-
     if (b == Qt::LeftButton) {
         world[row][col] = START_POS;
         start = QPoint(row, col);
+        *logReporter << "Set Start: [" << col << ',' << row << "]\n";
     }
     if (b == Qt::RightButton) {
         world[row][col] = END_POS;
         end = QPoint(row, col);
+        *logReporter << "Set End: [" << col << ',' << row << "]\n";
     }
+
     selfUpdate();
 }
 

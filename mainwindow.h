@@ -20,8 +20,10 @@ class MainWindow : public QMainWindow
     int w = SQUARE / N;
     int status = 0;
 
+    QFile *logFile = new QFile("C:\\Users\\H2MAGIC\\Desktop\\log.txt");
+    QTextStream *logReporter;
+
     QPushButton *clearButton = new QPushButton("全部清空", this);
-    QPushButton *setHinderButton = new QPushButton("设置障碍", this);
     QPushButton *runButton = new QPushButton("开始寻路", this);
     QLabel *statusLabel = new QLabel("当前状态: ", this);
     QLabel *currentStatusLabel = new QLabel("设置障碍", this);

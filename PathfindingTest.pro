@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 QMAKE_CXXFLAGS += -Wno-unused-function
 
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp
