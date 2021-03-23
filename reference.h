@@ -23,6 +23,7 @@
 
 #include <QDebug>
 #include <QFile>
+#include <QList>
 #include <QMap>
 #include <QPoint>
 #include <QSet>

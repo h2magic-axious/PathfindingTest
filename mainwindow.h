@@ -30,17 +30,18 @@ class MainWindow : public QMainWindow
 
     QPoint start;
     QPoint end;
+    QList<QPoint> route;
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    bool posToRC(int x, int y, int *resultX, int *resultY);
-    bool posInWorld(int x, int y);
-    QRect RCToPos(int r, int c);
+    bool positionToRowCol(int x, int y, int *row, int *col);
+    bool positionInWorld(int x, int y);
+    QRect rowColToIndex(int r, int c);
     bool checkWorld();
 
-    bool pathFinding(QPoint start, QPoint end, int world[N][N]);
+    bool pathFinding(QPoint start, QPoint end, int world[N][N], QList<QPoint> *result);
 
     void paintEvent(QPaintEvent *);
     void mouseDoubleClickEvent(QMouseEvent *event);

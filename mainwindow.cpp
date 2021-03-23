@@ -32,7 +32,10 @@ MainWindow::MainWindow(QWidget *parent)
             return;
         }
 
-        if (!pathFinding(start, end, world)) {
+        if (pathFinding(start, end, world, &route)) {
+            for (QPoint p : route)
+                world[p.x()][p.y()] = ROUTE;
+        } else {
             QMessageBox::information(this, "未找到", "未找到任何路径");
             return;
         }
@@ -50,24 +53,24 @@ MainWindow::~MainWindow()
     logFile->close();
 }
 
-bool MainWindow::posToRC(int x, int y, int *resultX, int *resultY)
+bool MainWindow::positionToRowCol(int x, int y, int *row, int *col)
 {
-    if (!posInWorld(x, y))
+    if (!positionInWorld(x, y))
         return false;
 
-    *resultX = (x - START_X) / w;
-    *resultY = (y - START_Y) / w;
+    *col = (x - START_X) / w;
+    *row = (y - START_Y) / w;
     return true;
 }
 
-bool MainWindow::posInWorld(int x, int y)
+bool MainWindow::positionInWorld(int x, int y)
 {
     bool bx = x > START_X && x < START_X + SQUARE;
     bool by = y > START_Y && y < START_Y + SQUARE;
     return bx && by;
 }
 
-QRect MainWindow::RCToPos(int r, int c)
+QRect MainWindow::rowColToIndex(int r, int c)
 {
     return QRect(START_X + c * w, START_Y + r * w, w, w);
 }
@@ -76,23 +79,23 @@ bool MainWindow::checkWorld()
 {
     int sum = 0;
     int temp = 0;
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < N; j++) {
-            temp = world[i][j];
+    for (int row = 0; row < N; row++)
+        for (int col = 0; col < N; col++) {
+            temp = world[row][col];
             if (temp == 1 || temp == 0)
                 continue;
-            sum += world[i][j];
+            sum += world[row][col];
         }
     return sum == 5;
 }
 
-bool MainWindow::pathFinding(QPoint start, QPoint end, int world[N][N])
+bool MainWindow::pathFinding(QPoint start, QPoint end, int world[N][N], QList<QPoint> *result)
 {
     // coding
     // all route mark with GREEN, look like: world[i][j] = ROUTE;
     // if find successfully, return true.
     *logReporter << "Start!\n";
-    return aStar(start, end, world, logReporter);
+    return aStar(start, end, world, result, logReporter);
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -104,7 +107,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     for (int i = 0; i < N; i++)
         for (int j = 0; j < N; j++) {
-            QRect tempRect = RCToPos(i, j);
+            QRect tempRect = rowColToIndex(i, j);
             worldTemp = world[i][j];
 
             if (worldTemp == CAN_MOVE)
@@ -119,7 +122,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter->setBrush(Qt::green);
 
             painter->drawRect(tempRect);
-            painter->drawText(tempRect, QString("%1,%2").arg(j).arg(i));
+            painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
         }
 
     painter->end();
@@ -132,7 +135,7 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     int posY = event->y();
     int row = -1;
     int col = -1;
-    if (!posToRC(posX, posY, &col, &row))
+    if (!positionToRowCol(posX, posY, &row, &col))
         return;
 
     if (b == Qt::LeftButton) {
@@ -155,7 +158,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
     int posY = event->y();
     int col = -1;
     int row = -1;
-    if (!posToRC(posX, posY, &col, &row))
+    if (!positionToRowCol(posX, posY, &col, &row))
         return;
 
     if (status == HINDER)

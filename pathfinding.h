@@ -59,7 +59,7 @@ Node static *minScore(const PointSet &list, const PointScoreMap &fm, QTextStream
     for (Node *p : list) {
         int pValue = fm.value(p->toString());
 
-        //        *logRepoter << "    Check: " << p->toString() << " Score: " << pValue << '\n';
+        *logRepoter << "    Check: " << p->toString() << " Score: " << pValue << '\n';
 
         if (!pValue) {
             *logRepoter << "  Get min f-value point: " << p->toString() << '\n';
@@ -117,10 +117,12 @@ PointSet static neighbour(
                 result << pt;
             }
         }
+    *logRepoter << '\n';
     return result;
 }
 
-bool static aStar(QPoint start, QPoint end, int world[N][N], QTextStream *logRepoter)
+bool static aStar(
+    QPoint start, QPoint end, int world[N][N], QList<QPoint> *result, QTextStream *logRepoter)
 {
     PointSet openSet;
     PointSet closeSet;
@@ -143,9 +145,10 @@ bool static aStar(QPoint start, QPoint end, int world[N][N], QTextStream *logRep
 
         // 如果tempPoint是终点，则得出结果
         if (tempPoint->point == end) {
+            result->clear();
             while (tempPoint->parent->point != start) {
                 tempPoint = tempPoint->parent;
-                world[tempPoint->point.x()][tempPoint->point.y()] = ROUTE;
+                result->push_front(tempPoint->point);
             }
             return true;
         }
