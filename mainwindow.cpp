@@ -122,7 +122,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter->setBrush(Qt::green);
 
             painter->drawRect(tempRect);
-            painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
+            //painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
         }
 
     painter->end();

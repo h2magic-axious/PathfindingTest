@@ -5,7 +5,7 @@
 #pragma execution_character_set(“utf - 8”)
 #endif
 
-#define N 20
+#define N 50
 #define DX 10
 
 #define START_X 10
@@ -93,7 +93,13 @@ static bool checkPoint(Position p)
 
 static int heuristic(Position p1, Position p2)
 {
-    return 10 * (qAbs(p1.col - p2.col) + qAbs(p1.row - p2.row));
+    int dx = qAbs(p1.col - p2.col);
+    int dy = qAbs(p1.row - p2.row);
+
+    int hStraight = dx + dy;
+    int hDiagonal = qMin(dx, dy);
+
+    return 14 * hDiagonal + 10 * (hStraight - 2 * hDiagonal);
 }
 
 #endif // REFERENCE_H
