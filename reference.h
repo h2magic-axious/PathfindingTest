@@ -69,8 +69,31 @@ public:
 
     ~Node() = default;
 
-    bool operator==(const Node &other) { return position == other.position; }
-    bool operator!=(const Node &other) { return position != other.position; }
+    bool operator==(const Node &other)
+    {
+        return position == other.position && parent == other.parent;
+    }
+    bool operator!=(const Node &other)
+    {
+        return position != other.position || parent != other.parent;
+    }
+    QString toString()
+    {
+        if (parent)
+            return position.toString() + ";" + parent->position.toString();
+        else
+            return position.toString();
+    }
 };
+
+static bool checkPoint(Position p)
+{
+    return (p.col >= 0 && p.col < N) && (p.row >= 0 && p.row < N);
+}
+
+static int heuristic(Position p1, Position p2)
+{
+    return 10 * (qAbs(p1.col - p2.col) + qAbs(p1.row - p2.row));
+}
 
 #endif // REFERENCE_H
