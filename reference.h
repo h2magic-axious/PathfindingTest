@@ -5,7 +5,7 @@
 #pragma execution_character_set(“utf - 8”)
 #endif
 
-#define N 50
+#define N 20
 #define DX 10
 
 #define START_X 10
@@ -44,15 +44,25 @@ public:
         d = 0;
     }
     Position(int r, int c) : row(r), col(c) { d = row * row + col * col; }
+    Position(QString stringPosition)
+    {
+        QStringList stringList = stringPosition.split(',');
+        row = stringList.value(0).toInt();
+        col = stringList.value(1).toInt();
+        d = row * row + col * col;
+    }
     ~Position() = default;
 
     bool operator<(const Position &other) { return d < other.d; }
     bool operator==(const Position &other) { return (row == other.row) && (col == other.col); }
-    bool operator!=(const Position &other) { return (row != other.row) && (col != other.col); }
+    bool operator!=(const Position &other) { return (row != other.row) || (col != other.col); }
     QString toString() { return QString("%1,%2").arg(row).arg(col); }
 
     int worldValue(int world[N][N]) { return world[row][col]; }
 };
+
+typedef QList<Position> PositionList;
+typedef QMap<QString, int> PositionScoreMap;
 
 class Node
 {
@@ -100,6 +110,19 @@ static int heuristic(Position p1, Position p2)
     int hDiagonal = qMin(dx, dy);
 
     return 14 * hDiagonal + 10 * (hStraight - 2 * hDiagonal);
+}
+
+static int distance(Position p1, Position p2)
+{
+    int dx = qAbs(p1.col - p2.col);
+    int dy = qAbs(p1.row - p2.row);
+
+    if (dx + dy == 1)
+        return 10;
+    if (dx + dy == 2)
+        return 14;
+
+    return 0;
 }
 
 #endif // REFERENCE_H

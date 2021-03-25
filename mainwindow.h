@@ -10,7 +10,7 @@
 #include <QRect>
 #include <QTime>
 
-#include "pathfinding.h"
+#include "AStar.h"
 
 class MainWindow : public QMainWindow
 {

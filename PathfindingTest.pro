@@ -23,6 +23,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    AStar.h \
     mainwindow.h \
     pathfinding.h \
     reference.h

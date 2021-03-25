@@ -40,6 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
             return;
         }
         status = HINDER;
+
         selfUpdate();
     });
 
@@ -50,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    logFile->close();
+    
 }
 
 bool MainWindow::positionToRowCol(int x, int y, int *row, int *col)
@@ -95,7 +96,7 @@ bool MainWindow::pathFinding(Position start, Position end, int world[N][N], Posi
     // all route mark with GREEN, look like: world[i][j] = ROUTE;
     // if find successfully, return true.
     *logReporter << "Start!\n";
-    return aStar(start, end, world, result, logReporter);
+    return aStar(start, end, world, result);
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -122,7 +123,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter->setBrush(Qt::green);
 
             painter->drawRect(tempRect);
-            //painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
+            painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
         }
 
     painter->end();
