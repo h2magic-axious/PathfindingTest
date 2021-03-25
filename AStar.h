@@ -6,6 +6,11 @@
 // Map< parentPosititon, childPosition >
 typedef QMap<QString, QString> RouteMap;
 
+static bool PositionInWorld(Position position)
+{
+    return (position.row >= 0 && position.row < N) && (position.col >= 0 && position.col < N);
+}
+
 static Position minScore(PositionList &set, PositionScoreMap &fMap)
 {
     int fTemp = -1;
@@ -39,6 +44,9 @@ static PositionList neighbourPositions(Position position, int world[N][N])
                 continue;
             if (tempPosition == position)
                 continue;
+            if (!PositionInWorld(tempPosition))
+                continue;
+
             result << tempPosition;
         }
     return result;
@@ -67,6 +75,7 @@ static bool aStar(Position start, Position end, int world[N][N], PositionList *r
         if (x == end) {
             QString currentPosition = end.toString();
             QString stringStartPosition = start.toString();
+            result->clear();
 
             QString parentPosition = cameForm.value(currentPosition);
             while (parentPosition != stringStartPosition) {
