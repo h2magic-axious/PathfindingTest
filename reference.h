@@ -5,7 +5,7 @@
 #pragma execution_character_set(“utf - 8”)
 #endif
 
-#define N 20
+#define N 100
 #define DX 10
 
 #define START_X 10
@@ -63,43 +63,6 @@ public:
 
 typedef QList<Position> PositionList;
 typedef QMap<QString, int> PositionScoreMap;
-
-class Node
-{
-public:
-    Position position;
-    Node *parent;
-
-    Node()
-    {
-        position = Position();
-        parent = nullptr;
-    }
-    Node(Position pt, Node *pr) : position(pt), parent(pr) {}
-
-    ~Node() = default;
-
-    bool operator==(const Node &other)
-    {
-        return position == other.position && parent == other.parent;
-    }
-    bool operator!=(const Node &other)
-    {
-        return position != other.position || parent != other.parent;
-    }
-    QString toString()
-    {
-        if (parent)
-            return position.toString() + ";" + parent->position.toString();
-        else
-            return position.toString();
-    }
-};
-
-static bool checkPoint(Position p)
-{
-    return (p.col >= 0 && p.col < N) && (p.row >= 0 && p.row < N);
-}
 
 static int heuristic(Position p1, Position p2)
 {

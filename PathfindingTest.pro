@@ -25,7 +25,6 @@ SOURCES += \
 HEADERS += \
     AStar.h \
     mainwindow.h \
-    pathfinding.h \
     reference.h
 
 # Default rules for deployment.

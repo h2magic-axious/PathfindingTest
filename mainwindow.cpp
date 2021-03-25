@@ -40,13 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
             return;
         }
         status = HINDER;
-
         selfUpdate();
     });
-
-    logFile->open(QIODevice::WriteOnly | QIODevice::Text);
-    logReporter = new QTextStream(logFile);
-    logFile->flush();
 }
 
 MainWindow::~MainWindow()
@@ -83,7 +78,7 @@ bool MainWindow::checkWorld()
     for (int row = 0; row < N; row++)
         for (int col = 0; col < N; col++) {
             temp = world[row][col];
-            if (temp == 1 || temp == 0)
+            if (temp == CAN_NOT_MOVE || temp == CAN_MOVE || temp == ROUTE)
                 continue;
             sum += world[row][col];
         }
@@ -95,7 +90,6 @@ bool MainWindow::pathFinding(Position start, Position end, int world[N][N], Posi
     // coding
     // all route mark with GREEN, look like: world[i][j] = ROUTE;
     // if find successfully, return true.
-    *logReporter << "Start!\n";
     return aStar(start, end, world, result);
 }
 
@@ -123,7 +117,7 @@ void MainWindow::paintEvent(QPaintEvent *)
                 painter->setBrush(Qt::green);
 
             painter->drawRect(tempRect);
-            painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
+            //painter->drawText(tempRect, QString("%1,%2").arg(i).arg(j));
         }
 
     painter->end();
@@ -142,12 +136,10 @@ void MainWindow::mouseDoubleClickEvent(QMouseEvent *event)
     if (b == Qt::LeftButton) {
         world[row][col] = START_POS;
         start = Position(row, col);
-        *logReporter << "Set Start: [" << row << ',' << col << "]\n";
     }
     if (b == Qt::RightButton) {
         world[row][col] = END_POS;
         end = Position(row, col);
-        *logReporter << "Set End: [" << row << ',' << col << "]\n";
     }
 
     selfUpdate();
